@@ -66,17 +66,21 @@ gexp.dist.compare=function(data_list,gene,only_nonzero=T){
     
   })
   
+  cols=c("salmon","blue")  
+  names(cols)=names(data_list)
+  
   dat=do.call(rbind,plot_data)
   
   dat=data.frame(counts=as.numeric(dat[,1]),var=dat[,2])
   
   g3=g+geom_density(data=dat,aes(counts,fill=var,after_stat(ndensity)),position = "identity",alpha=0.5)+
     
-    labs(title=gene)+xlim(c(0,max(dat$counts)))
+    labs(title=gene)+xlim(c(0,max(dat$counts)))+scale_fill_manual(values=cols)
   
   return(g3)
   
 }
+
 
 
 ##After discreting viewing gene expression in clusters
