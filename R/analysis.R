@@ -22,6 +22,15 @@ Data.gexp.stats=function(data_counts,th.gexp_vec,min.cells){
   gene.exp=reshape2::melt(gene.exp)
   return(gene.exp)
 }
+
+#' Descriptive statistics of gene exp distribution
+#' @export
+gexp.dstats=function(data_counts,genes){
+  data=data_counts[genes,]
+  mean=apply(data,1,mean)
+  sd=apply(data,1,sd)
+  return(list(mean=mean,sd=sd))
+}
 ########################################################################################################
 ##Utility function
 #' To select appropriate cutoff values for number of cells given gexp data
