@@ -41,69 +41,41 @@ plot.gene.stats.dist=function(data_mat,range=c(0,10)){
 }
 
 
-##Plots to visualise various steps of ScRB pipeline
-## Normalisation - sctransform
-gexp.dist.compare=function(data_list,metadata_list,gene,only_nonzero=T){
-  g = ggplot2::ggplot()+ggplot2::theme_classic()+ggplot2::theme(plot.margin=unit(c(0,0,0,0),"cm"))+
-    ggplot2::theme(axis.title.y=element_blank(),axis.title.x=element_blank(),legend.position = "top")
-
-  plot_data=lapply(names(data_list),function(x){
-    dat=as.data.frame(as.numeric(t(data_list[[x]][gene,])))
-    if(only_nonzero){
-      dat=dat[dat[,1]>0,]
-    }
-    var=rep(x,length(dat))
-    return(cbind(counts=dat,var=var))
-  })
-  if(is.list(plot_data)){
-    dat=do.call(rbind,plot_data)
-  }
-
-
-
-  dat=data.frame(counts=as.numeric(dat[,1]),var=dat[,2])
-
-  g3=g+geom_histogram(data=dat,aes(counts,fill=var),position = "dodge",stat = "density")+
-    labs(title=gene)
-  return(g3)
-
-}
-
-
 ##gene expression distributions
 
+
 gexp.dist.compare=function(data_list,gene,only_nonzero=T){
-
+  
   g = ggplot2::ggplot()+ggplot2::theme_classic()+ggplot2::theme(plot.margin=unit(c(0,0,0,0),"cm"))+
-
+    
     ggplot2::theme(axis.title.y=element_blank(),axis.title.x=element_blank(),legend.position = "top")
-
-    plot_data=lapply(names(data_list),function(x){
-
+  
+  plot_data=lapply(names(data_list),function(x){
+    
     dat=as.data.frame(t(data_list[[x]][gene,]))
-
+    
     if(only_nonzero){
-
+      
       dat=dat[dat[,1]>0,]
-
+      
     }
-
+    
     var=rep(x,length(dat))
-
+    
     return(cbind(counts=as.numeric(dat),var=var))
-
+    
   })
-
+  
   dat=do.call(rbind,plot_data)
-
+  
   dat=data.frame(counts=as.numeric(dat[,1]),var=dat[,2])
-
-  g3=g+geom_histogram(data=dat,aes(counts,fill=var),position = "dodge",stat = "density")+
-
+  
+  g3=g+geom_density(data=dat,aes(counts,fill=var,after_stat(ndensity)),position = "identity",alpha=0.5)+
+    
     labs(title=gene)+xlim(c(0,max(dat$counts)))
-
+  
   return(g3)
-
+  
 }
 
 
